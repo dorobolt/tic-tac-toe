@@ -5,37 +5,45 @@
 // if player or computer have all some set of array then player or computer win
 // if game board is empty then game is tie
 
+const panel = document.querySelectorAll('.panel');
+
 function gameStart() {
-    const gameBoard = ['ul', 'um', 'ur', 'ml', 'm', 'mr', 'bl', 'bm', 'br'];
+    const gameBoard = ['0', '1', '2', '3', '4', '5', '6', '7', '8'];
+    const gameProgress = [];
     const playerBoard = [];
     const computerBoard = [];
     const choose = (board) => {
+        console.log(gameProgress.includes(playerBoard))
+        if (gameProgress.includes(gameBoard[board]) == true && playerBoard.length !== 0) return
+        panel[board].classList.add('player1')
+        panel[board].classList.remove('open')
         playerBoard.push(gameBoard[board]);
-        gameBoard.splice(board, 1);
-        result();
-        let x = computerChoose();
-        computerBoard.push(gameBoard[x]);
-        gameBoard.splice(x, 1)
+        gameProgress.push(board);
+        computerChoose();
         result();
         console.log(playerBoard);
         console.log(computerBoard);
-        console.log(gameBoard);
+        console.log(gameProgress);
 
     }
     function computerChoose() {
-        let num = Math.floor(gameBoard.length * Math.random());
-        return num;
+        const open = document.querySelectorAll('.open');
+        let num = Math.floor(open.length * Math.random());
+        open[num].classList.add('player2')
+        open[num].classList.remove('open')
+        computerBoard.push(gameBoard[open[num].dataset.value]);
+        gameProgress.push(open[num].dataset.value);
     }
 
     function result() {
-        const winCondition1 = ['ul', 'um', 'ur'];
-        const winCondition2 = ['ml', 'm', 'mr'];
-        const winCondition3 = ['bl', 'bm', 'br'];
-        const winCondition4 = ['ul', 'ml', 'bl'];
-        const winCondition5 = ['um', 'm', 'bm'];
-        const winCondition6 = ['ur', 'mr', 'br'];
-        const winCondition7 = ['ul', 'm', 'br'];
-        const winCondition8 = ['ur', 'm', 'bl'];
+        const winCondition1 = ['0', '1', '2'];
+        const winCondition2 = ['3', '4', '5'];
+        const winCondition3 = ['6', '7', '8'];
+        const winCondition4 = ['0', '3', '6'];
+        const winCondition5 = ['1', '4', '7'];
+        const winCondition6 = ['2', '5', '8'];
+        const winCondition7 = ['0', '4', '8'];
+        const winCondition8 = ['2', '4', '6'];
 
         if (winCondition1.every(r => playerBoard.includes(r)) == true ||
             winCondition2.every(r => playerBoard.includes(r)) == true ||
@@ -46,6 +54,7 @@ function gameStart() {
             winCondition7.every(r => playerBoard.includes(r)) == true ||
             winCondition8.every(r => playerBoard.includes(r)) == true) {
             console.log('Player Win!!');
+            return gameStart();
         }
         else if (winCondition1.every(r => computerBoard.includes(r)) == true ||
             winCondition2.every(r => computerBoard.includes(r)) == true ||
@@ -56,9 +65,11 @@ function gameStart() {
             winCondition7.every(r => computerBoard.includes(r)) == true ||
             winCondition8.every(r => computerBoard.includes(r)) == true) {
             console.log('Computer Win!!');
+            return gameStart();
         }
-        else if (gameBoard.length === 0) {
+        else if (gameProgress.length === 9) {
             console.log('Tie Game');
+            return gameStart();
         }
         else {
             return;
@@ -67,4 +78,23 @@ function gameStart() {
     return { gameBoard, playerBoard, computerBoard, choose };
 }
 
-const player = gameStart();
+function startGame() {
+    const board = document.querySelector('#gameboard');
+    board.classList.remove('hidden')
+    startButton.classList.add('hidden')
+}
+
+function start() {
+    const player = gameStart();
+    panel.forEach(((num) => {
+        num.addEventListener('click', () => player.choose(num.dataset.value));
+    }));
+}
+
+const startButton = document.querySelector('#gamestart');
+startButton.addEventListener('click', () => startGame());
+start();
+
+
+
+

@@ -1,0 +1,24 @@
+#gameboard {
+    display: grid;
+    width: 500px;
+    height: 500px;
+    border: 2px solid white;
+    grid-template-columns: repeat(3, auto);
+}
+
+.panel {
+    border: 1px solid black;
+}
+
+.panel.player1 {
+    background-color: blue;
+}
+
+.panel.player2 {
+    background-color: red;
+}
+
+#gameboard.hidden,
+.hidden {
+    display: none;
+}
