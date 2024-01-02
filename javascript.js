@@ -6,94 +6,125 @@
 // if game board is empty then game is tie
 
 const panel = document.querySelectorAll('.panel');
+const playAgain = document.querySelector('#retry')
+const startButton = document.querySelector('#gamestart');
+const gameResult = document.querySelector('#result');
+const playerName = document.querySelector('#name');
+const forms = document.querySelector('#forms');
+let game = 0;
+let namePlayer = `player`;
 
 function gameStart() {
     const gameBoard = ['0', '1', '2', '3', '4', '5', '6', '7', '8'];
-    const gameProgress = [];
-    const playerBoard = [];
-    const computerBoard = [];
+    let gameProgress = [];
+    let player1Board = [];
+    let player2Board = [];
     const choose = (board) => {
-        console.log(gameProgress.includes(playerBoard))
-        if (gameProgress.includes(gameBoard[board]) == true && playerBoard.length !== 0) return
+        console.log(gameProgress.includes(player1Board))
+        if (gameProgress.includes(gameBoard[board]) == true && player1Board.length !== 0) return
         panel[board].classList.add('player1')
         panel[board].classList.remove('open')
-        playerBoard.push(gameBoard[board]);
+        player1Board.push(gameBoard[board]);
         gameProgress.push(board);
+        result();
         computerChoose();
         result();
-        console.log(playerBoard);
-        console.log(computerBoard);
+        console.log(player1Board);
+        console.log(player2Board);
         console.log(gameProgress);
 
     }
-    function computerChoose() {
-        const open = document.querySelectorAll('.open');
-        let num = Math.floor(open.length * Math.random());
-        open[num].classList.add('player2')
-        open[num].classList.remove('open')
-        computerBoard.push(gameBoard[open[num].dataset.value]);
-        gameProgress.push(open[num].dataset.value);
+    const computerChoose = () => {
+        if (game !== 0) {
+            const open = document.querySelectorAll('.open');
+            let num = Math.floor(open.length * Math.random());
+            open[num].classList.add('player2')
+            open[num].classList.remove('open')
+            player2Board.push(gameBoard[open[num].dataset.value]);
+            gameProgress.push(open[num].dataset.value);
+        }
+        else return
     }
 
-    function result() {
-        const winCondition1 = ['0', '1', '2'];
-        const winCondition2 = ['3', '4', '5'];
-        const winCondition3 = ['6', '7', '8'];
-        const winCondition4 = ['0', '3', '6'];
-        const winCondition5 = ['1', '4', '7'];
-        const winCondition6 = ['2', '5', '8'];
-        const winCondition7 = ['0', '4', '8'];
-        const winCondition8 = ['2', '4', '6'];
-
-        if (winCondition1.every(r => playerBoard.includes(r)) == true ||
-            winCondition2.every(r => playerBoard.includes(r)) == true ||
-            winCondition3.every(r => playerBoard.includes(r)) == true ||
-            winCondition4.every(r => playerBoard.includes(r)) == true ||
-            winCondition5.every(r => playerBoard.includes(r)) == true ||
-            winCondition6.every(r => playerBoard.includes(r)) == true ||
-            winCondition7.every(r => playerBoard.includes(r)) == true ||
-            winCondition8.every(r => playerBoard.includes(r)) == true) {
-            console.log('Player Win!!');
-            return gameStart();
-        }
-        else if (winCondition1.every(r => computerBoard.includes(r)) == true ||
-            winCondition2.every(r => computerBoard.includes(r)) == true ||
-            winCondition3.every(r => computerBoard.includes(r)) == true ||
-            winCondition4.every(r => computerBoard.includes(r)) == true ||
-            winCondition5.every(r => computerBoard.includes(r)) == true ||
-            winCondition6.every(r => computerBoard.includes(r)) == true ||
-            winCondition7.every(r => computerBoard.includes(r)) == true ||
-            winCondition8.every(r => computerBoard.includes(r)) == true) {
-            console.log('Computer Win!!');
-            return gameStart();
-        }
-        else if (gameProgress.length === 9) {
-            console.log('Tie Game');
-            return gameStart();
-        }
-        else {
-            return;
+    const result = () => {
+        const winCondition = [
+            ['0', '1', '2'],
+            ['3', '4', '5'],
+            ['6', '7', '8'],
+            ['0', '3', '6'],
+            ['1', '4', '7'],
+            ['2', '5', '8'],
+            ['0', '4', '8'],
+            ['2', '4', '6']
+        ]
+        for (let i = 0; i < winCondition.length; i++) {
+            if (winCondition[i].every(r => player1Board.includes(r)) == true) {
+                console.log('player1 win!')
+                gameResult.textContent = `${namePlayer} Win !!!`
+                endGame();
+            }
+            else if (winCondition[i].every(r => player2Board.includes(r)) == true) {
+                console.log('player2 win!')
+                gameResult.textContent = `${namePlayer} You Lose !!`
+                endGame();
+            }
+            else if (gameProgress.length === 9) {
+                console.log('Tie Game');
+                gameResult.textContent = 'Tie Game'
+                endGame();
+            }
         }
     }
-    return { gameBoard, playerBoard, computerBoard, choose };
+
+    const endGame = () => {
+        game = 0;
+        panel.forEach((num) => {
+            num.classList.add('disable')
+        })
+        playAgain.classList.remove('hidden');
+    }
+
+    const retry = () => {
+        panel.forEach((num) => {
+            num.classList.remove('player1')
+            num.classList.remove('player2')
+            num.classList.remove('disable')
+            if (num.classList.contains('open') !== true) {
+                num.classList.add('open')
+            }
+        })
+        gameResult.textContent = ''
+        gameProgress = [];
+        player1Board = [];
+        player2Board = [];
+        game = 1;
+        console.log(gameProgress)
+    }
+
+    return { gameBoard, player1Board, player2Board, choose, retry };
 }
 
 function startGame() {
     const board = document.querySelector('#gameboard');
     board.classList.remove('hidden')
     startButton.classList.add('hidden')
-}
-
-function start() {
-    const player = gameStart();
+    forms.classList.add('hidden')
+    namePlayer = playerName.value
+    game = 1;
+    console.log(game)
     panel.forEach(((num) => {
         num.addEventListener('click', () => player.choose(num.dataset.value));
-    }));
+    }))
 }
 
-const startButton = document.querySelector('#gamestart');
+const player = gameStart();
 startButton.addEventListener('click', () => startGame());
-start();
+playAgain.addEventListener('click', function () {
+    player.retry();
+    game = 1;
+});
+
+
 
 
 

@@ -10,6 +10,11 @@
 
 <body>
     <button id="gamestart">Game Start</button>
+    <form action="#" id="forms">
+        <label for="name">Insert Your Name:</label>
+        <input type="text" id="name" name="name" value="player">
+    </form>
+    <div id="result"></div>
     <div id="gameboard" class="hidden">
         <div class="panel open" data-value='0'></div>
         <div class="panel open" data-value='1'></div>
@@ -21,6 +26,7 @@
         <div class="panel open" data-value='7'></div>
         <div class="panel open" data-value='8'></div>
     </div>
+    <button id="retry" class="hidden">Play Again?</button>
 </body>
 
 <script src="/javascript.js" defer></script>
