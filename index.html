@@ -9,24 +9,35 @@
 </head>
 
 <body>
-    <button id="gamestart">Game Start</button>
-    <form action="#" id="forms">
-        <label for="name">Insert Your Name:</label>
-        <input type="text" id="name" name="name" value="player">
-    </form>
-    <div id="result"></div>
-    <div id="gameboard" class="hidden">
-        <div class="panel open" data-value='0'></div>
-        <div class="panel open" data-value='1'></div>
-        <div class="panel open" data-value='2'></div>
-        <div class="panel open" data-value='3'></div>
-        <div class="panel open" data-value='4'></div>
-        <div class="panel open" data-value='5'></div>
-        <div class="panel open" data-value='6'></div>
-        <div class="panel open" data-value='7'></div>
-        <div class="panel open" data-value='8'></div>
+    <div id="container">
+        <div id="title">Tic - Tac - Toe</div>
+        <form action="#" id="forms">
+            <label for="name">Insert Your Name:</label>
+            <input type="text" id="name" name="name" value="Player">
+        </form>
+
+        <div id="choosePlayer">
+            <div class="text">Choose Order:</div>
+            <button id="player1" class="pushed">Player 1</button>
+            <button id="player2">Player 2</button>
+        </div>
+        <div class="button"><button id="gameStart">Game Start</button></div>
+        <div id="result" class="text"></div>
+        <div id="gameBoard" class="hidden">
+            <div class="panel open" data-value='0'></div>
+            <div class="panel open" data-value='1'></div>
+            <div class="panel open" data-value='2'></div>
+            <div class="panel open" data-value='3'></div>
+            <div class="panel open" data-value='4'></div>
+            <div class="panel open" data-value='5'></div>
+            <div class="panel open" data-value='6'></div>
+            <div class="panel open" data-value='7'></div>
+            <div class="panel open" data-value='8'></div>
+        </div>
+        <div class="button">
+            <button id="retry" class="hidden">Play Again?</button>
+        </div>
     </div>
-    <button id="retry" class="hidden">Play Again?</button>
 </body>
 
 <script src="/javascript.js" defer></script>

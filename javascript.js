@@ -1,26 +1,38 @@
-// game logic:
-// Player choose an array item of game board
-// moved that item from game board to player board
-// computer choose the array item from game board and move it to computer board
-// if player or computer have all some set of array then player or computer win
-// if game board is empty then game is tie
 
-const panel = document.querySelectorAll('.panel');
 const playAgain = document.querySelector('#retry')
-const startButton = document.querySelector('#gamestart');
-const gameResult = document.querySelector('#result');
-const playerName = document.querySelector('#name');
-const forms = document.querySelector('#forms');
-let game = 0;
-let namePlayer = `player`;
+const startButton = document.querySelector('#gameStart');
+
+const player1 = document.querySelector('#player1');
+const player2 = document.querySelector('#player2');
+let order = 1;
 
 function gameStart() {
+    const panel = document.querySelectorAll('.panel');
+    const board = document.querySelector('#gameBoard');
+    const gameResult = document.querySelector('#result');
+    const playerName = document.querySelector('#name');
+    const forms = document.querySelector('#forms');
+    const choosePlayer = document.querySelector('#choosePlayer')
+    let game = 0;
+    let namePlayer = `Player`;
     const gameBoard = ['0', '1', '2', '3', '4', '5', '6', '7', '8'];
     let gameProgress = [];
     let player1Board = [];
     let player2Board = [];
+    const startGame = () => {
+        board.classList.remove('hidden');
+        startButton.classList.add('hidden');
+        forms.classList.add('hidden');
+        choosePlayer.classList.add('hidden');
+        namePlayer = playerName.value;
+        game = 1;
+        console.log(game);
+        if (order === 2) player.computerChoose();
+        panel.forEach(((num) => {
+            num.addEventListener('click', () => player.choose(num.dataset.value));
+        }))
+    }
     const choose = (board) => {
-        console.log(gameProgress.includes(player1Board))
         if (gameProgress.includes(gameBoard[board]) == true && player1Board.length !== 0) return
         panel[board].classList.add('player1')
         panel[board].classList.remove('open')
@@ -29,10 +41,6 @@ function gameStart() {
         result();
         computerChoose();
         result();
-        console.log(player1Board);
-        console.log(player2Board);
-        console.log(gameProgress);
-
     }
     const computerChoose = () => {
         if (game !== 0) {
@@ -45,7 +53,6 @@ function gameStart() {
         }
         else return
     }
-
     const result = () => {
         const winCondition = [
             ['0', '1', '2'],
@@ -75,7 +82,6 @@ function gameStart() {
             }
         }
     }
-
     const endGame = () => {
         game = 0;
         panel.forEach((num) => {
@@ -83,7 +89,6 @@ function gameStart() {
         })
         playAgain.classList.remove('hidden');
     }
-
     const retry = () => {
         panel.forEach((num) => {
             num.classList.remove('player1')
@@ -98,31 +103,28 @@ function gameStart() {
         player1Board = [];
         player2Board = [];
         game = 1;
-        console.log(gameProgress)
+        board.classList.add('hidden');
+        playAgain.classList.add('hidden');
+        startButton.classList.remove('hidden');
+        forms.classList.remove('hidden');
+        choosePlayer.classList.remove('hidden');
     }
-
-    return { gameBoard, player1Board, player2Board, choose, retry };
-}
-
-function startGame() {
-    const board = document.querySelector('#gameboard');
-    board.classList.remove('hidden')
-    startButton.classList.add('hidden')
-    forms.classList.add('hidden')
-    namePlayer = playerName.value
-    game = 1;
-    console.log(game)
-    panel.forEach(((num) => {
-        num.addEventListener('click', () => player.choose(num.dataset.value));
-    }))
+    return { gameBoard, player1Board, player2Board, choose, retry, computerChoose, startGame };
 }
 
 const player = gameStart();
-startButton.addEventListener('click', () => startGame());
-playAgain.addEventListener('click', function () {
-    player.retry();
-    game = 1;
-});
+startButton.addEventListener('click', () => player.startGame());
+playAgain.addEventListener('click', () => player.retry());
+player1.addEventListener('click', () => {
+    order = 1;
+    player1.classList.add('pushed');
+    player2.classList.remove('pushed');
+})
+player2.addEventListener('click', () => {
+    order = 2;
+    player2.classList.add('pushed');
+    player1.classList.remove('pushed');
+})
 
 
 
